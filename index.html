@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRAKTAL | Obrada podataka & Razvoj aplikacija</title>
+    <style>
+        /* Osnovni stilovi i reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 70px; /* Prostor za fiksni mobilni meni na dnu */
+        }
+
+        /* POZADINA S LOGOTIPOM MANDALE */
+        .hero-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
+                url('logo.png'); 
+            
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            z-index: -1;
+            filter: brightness(0.7) contrast(1.1); 
+        }
+
+        /* Navigacija */
+        nav {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            height: 40px; 
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #D4AF37;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #D4AF37;
+        }
+
+        /* Glavni sadržaj */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 10rem 2rem 4rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 0 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #ffffff, #D4AF37, #fcf6ba, #bf953f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        /* Usluge - Grid */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            padding: 3rem;
+            border-radius: 12px;
+            transition: 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            background: rgba(212, 175, 55, 0.04);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h3 {
+            margin-bottom: 1.2rem;
+            color: #D4AF37; 
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        /* PROGRAM SHOWCASE SEKCIJA */
+        .showcase-section {
+            margin-top: 6rem;
+        }
+
+        .showcase-section h2 {
+            color: #D4AF37;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* Kocka u kocki (2x2) na desktopu */
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+        }
+
+        .program-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            transition: 0.4s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .program-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .program-img-wrapper {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #111;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .program-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease;
+            opacity: 0.85;
+        }
+
+        .program-card:hover .program-img-wrapper img {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .program-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .program-info h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        .program-info p {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .program-tag {
+            align-self: flex-start;
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            padding: 0.2rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        /* FAQ Sekcija */
+        .faq-section {
+            margin-top: 6rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            padding: 4rem 3rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .faq-section h2 {
+            color: #D4AF37;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .faq-item {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            padding-bottom: 1.5rem;
+        }
+
+        .faq-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .faq-item h4 {
+            color: #D4AF37;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .faq-item p {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        /* O nama / Info sekcija */
+        .about-section {
+            margin-top: 6rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            padding: 4rem 3rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .about-section h2 {
+            color: #D4AF37;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            color: #ddd;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .company-details {
+            list-style: none;
+        }
+
+        .company-details li {
+            margin-bottom: 0.8rem;
+            color: #eee;
+            font-size: 0.95rem;
+        }
+
+        .company-details strong {
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        /* Google Maps */
+        .map-container {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            height: 250px;
+        }
+
+        /* Kontakt sekcija */
+        .contact {
+            text-align: center;
+            margin-top: 6rem;
+            padding: 5rem 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact h2 {
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+
+        .contact-buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+
+        .btn-cta {
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: 0.3s ease;
+        }
+
+        .btn-main {
+            background: linear-gradient(45deg, #bf953f, #D4AF37, #fcf6ba);
+            color: #000;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: #fff;
+        }
+
+        .btn-email {
+            background: #111;
+            color: #fff;
+            border: 1px solid rgba(212,175,55,0.6);
+        }
+
+        .btn-sms {
+            background: #222;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.2);
+        }
+
+        /* FIKSNA TRAKA NA DNU ZA MOBITELE */
+        .mobile-quick-actions {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            grid-template-columns: repeat(4, 1fr);
+            z-index: 999;
+        }
+
+        .mobile-action-item {
+            text-align: center;
+            padding: 0.8rem 0;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .mobile-action-item:not(:last-child) {
+            border-right: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .mobile-action-item.wa { color: #25D366; }
+        .mobile-action-item.call { color: #D4AF37; }
+        .mobile-action-item.mail { color: #fcf6ba; }
+
+        footer {
+            text-align: center;
+            padding: 4rem;
+            font-size: 0.8rem;
+            color: #666;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 4rem;
+        }
+
+        /* Mobilna responzivnost */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .container {
+                padding-top: 12rem;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .program-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .contact h2 {
+                font-size: 1.6rem;
+            }
+
+            .mobile-quick-actions {
+                display: grid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-bg"></div>
+
+    <nav>
+        <div class="logo-container">
+            <img src="logo.png" alt="Fraktal Mandala Logo" class="logo-img">
+            <div class="logo-text">FRAKTAL</div>
+        </div>
+        <div class="nav-links">
+            <a href="#usluge">Usluge</a>
+            <a href="#projekti">Projekti</a>
+            <a href="#faq">Česta pitanja</a>
+            <a href="#o-nama">O nama</a>
+            <a href="#kontakt">Kontakt</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>FRAKTAL</h1>
+            <p class="tagline">Napredna obrada podataka • IT inženjering • Razvoj softvera po mjeri</p>
+        </section>
+
+        <!-- Usluge -->
+        <div class="services" id="usluge">
+            <div class="card">
+                <h3>Obrada podataka & Skladišta</h3>
+                <p>Automatizirano strukturiranje podataka, vođenje digitalnog stanja skladišta, precizno praćenje prodanih i neprodanih artikala te rješenja za instant inventuru.</p>
+            </div>
+            <div class="card">
+                <h3>Softver po mjeri</h3>
+                <p>Izrada namjenskih programa, web stranica i mobilnih aplikacija. Razvoj prilagođavamo isključivo vašim željama i specifičnim zahtjevima poslovanja.</p>
+            </div>
+            <div class="card">
+                <h3>Cybersecurity & IT</h3>
+                <p>Implementacija najviših sigurnosnih standarda, penetracijski testovi, optimizacija mrežne infrastrukture i aktivna zaštita sustava.</p>
+            </div>
+        </div>
+
+        <!-- PROGRAM SHOWCASE SEKCIJA -->
+        <section class="showcase-section" id="projekti">
+            <h2>Projekti & Softverska rješenja</h2>
+            <div class="program-grid">
+                
+                <!-- Program 1: Kratki video formati -->
+                <div class="program-card">
+                    <div class="program-img-wrapper">
+                        <img src="appslika.png" alt="Automated Shorts Creator">
+                    </div>
+                    <div class="program-info">
+                        <div>
+                            <h3>Automated Shorts Creator</h3>
+                            <p>Napredno rješenje za automatsku detekciju ključnih trenutaka, precizno montiranje i renderiranje video materijala optimiziranih za viralne formate.</p>
+                        </div>
+                        <span class="program-tag">Automation & Video</span>
+                    </div>
+                </div>
+
+                <!-- Program 2: Skladišta -->
+                <div class="program-card">
+                    <div class="program-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80" alt="Softver za skladište">
+                    </div>
+                    <div class="program-info">
+                        <div>
+                            <h3>Smart Warehouse V1</h3>
+                            <p>Inteligentno rješenje za automatizirano praćenje zaliha u realnom vremenu, analizu prodanih artikala te generiranje trenutnih inventura bez zastoja.</p>
+                        </div>
+                        <span class="program-tag">Data & Logistics</span>
+                    </div>
+                </div>
+
+                <!-- Program 3: NOVI SYNESIS INTEGRATION PROGRAM -->
+                <div class="program-card">
+                    <div class="program-img-wrapper">
+                        <img src="appshowcase.png" alt="Synesis Integration System">
+                    </div>
+                    <div class="program-info">
+                        <div>
+                            <h3>Synesis Data Integration</h3>
+                            <p>Automatizirano vođenje i kreiranje URA i IRA dokumenata. Skenirajte račune bez klasičnog skenera (koristeći mobitel) uz automatski bulk export u CSV format spreman za izravan uvoz u Synesis.</p>
+                        </div>
+                        <span class="program-tag">Accounting & OCR Automation</span>
+                    </div>
+                </div>
+
+                <!-- Program 4: Cybersecurity -->
+                <div class="program-card">
+                    <div class="program-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80" alt="Cybersecurity automatizacija">
+                    </div>
+                    <div class="program-info">
+                        <div>
+                            <h3>CyberSec Sentinel V1</h3>
+                            <p>Autonomni sustav za neprekidni nadzor mrežnog prometa, automatsku detekciju ranjivosti te instant izolaciju i neutralizaciju digitalnih prijetnji.</p>
+                        </div>
+                        <span class="program-tag">Security & AI</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Česta pitanja (FAQ) -->
+        <section class="faq-section" id="faq">
+            <h2>Česta Pitanja (FAQ)</h2>
+            
+            <div class="faq-item">
+                <h4>Kako točno pomažete u vođenju i praćenju skladišta?</h4>
+                <p>Razvijamo rješenja u kojima se u realnom vremenu unosi i sinkronizira stanje skladišta. Sustav automatski bilježi što se prodalo, što je ostalo na zalihi, pruža kompletnu analitiku kretanja robe te omogućuje automatsku i brzu inventuru jednim klikom, čime eliminiramo ljudske pogreške i gubitak vremena.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Radite li aplikacije prema gotovim predlošcima ili po narudžbi?</h4>
+                <p>Sve programe, web stranice i aplikacije izrađujemo isključivo po narudžbi ("custom-made"). To znači da ih radimo i oblikujemo točno onako kako korisnik zahtijeva, prilagođavajući arhitekturu koda vašim postojećim procesima.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>Kako započinje suradnja s obrtom FRAKTAL?</h4>
+                <p>Suradnja počinje inicijalnim konzultacijama (putem poziva, e-maila ili WhatsAppa) gdje analiziramo vaše trenutne potrebe i probleme s podacima. Nakon analize, predlažemo optimalno tehničko rješenje i rokove izrade.</p>
+            </div>
+        </section>
+
+        <!-- O nama -->
+        <section class="about-section" id="o-nama">
+            <h2>O nama</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>FRAKTAL je specijalizirani obrt usmjeren na rješavanje najzahtjevnijih tehničkih izazova u modernom IT okruženju. Naša misija je osigurati maksimalnu stabilnost, brzinu i apsolutnu sigurnost vaših podataka i sustava.</p>
+                    <ul class="company-details">
+                        <li><strong>Pun naziv:</strong> FRAKTAL, obrt za računalne usluge, vl. Dario Herceg</li>
+                        <li><strong>OIB:</strong> 87160722361</li>
+                        <li><strong>E-mail za upite:</strong> fraktal@fraktal-obrt.com</li>
+                        <li><strong>Sjedište:</strong> Ulica Antuna Mihanovića 36, 48000 Koprivnica</li>
+                        <li><strong>Glavna djelatnost:</strong> Računalna infrastruktura, obrada podataka te povezane djelatnosti</li>
+                    </ul>
+                </div>
+                <!-- Integrirana Google Karta -->
+                <div>
+                    <div class="map-container">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2764.123456789!2d16.8275!3d46.1612!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4766fa0496101965%3A0x7d87a6b8e8f6e2f!2sUl.%20Antuna%20Mihan%C4%87a%2036%2C%2048000%2C%20Koprivnica!5e0!3m2!1shr!2shr!4v1710000000000!5m2!1shr!2shr" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #aaa; margin-top: 0.5rem; text-align: center;">
+                        <a href="https://maps.google.com/?q=Antuna+Mihanovića+36+Koprivnica" target="_blank" style="color: #D4AF37; text-decoration: none; font-weight: 600;">
+                            📍 Otvori u Google Maps (Upute za vožnju)
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kontakt -->
+        <section class="contact" id="kontakt">
+            <h2 style="color: #D4AF37; margin-bottom: 1rem;">POKRENIMO VAŠ PROJEKT</h2>
+            <p style="color: #eee; font-weight: 300;">Dostupan sam putem svih kanala za brze konzultacije i dogovor.</p>
+            
+            <div class="contact-buttons-container">
+                <a href="tel:+385998731865" class="btn-cta btn-main">📞 Pozovi Odmah</a>
+                <a href="https://wa.me/385998731865" target="_blank" class="btn-cta btn-whatsapp">💬 WhatsApp Chat</a>
+                <a href="mailto:fraktal@fraktal-obrt.com?subject=Upit%20za%20IT%20usluge" class="btn-cta btn-email">✉️ Pošalji E-mail</a>
+                <a href="sms:+385998731865?body=Pozdrav,%20zanimaju%20me%20IT%20usluge." class="btn-cta btn-sms">📱 Pošalji SMS</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- FIKSNE BRZE AKCIJE NA MOBITELIMA -->
+    <div class="mobile-quick-actions">
+        <a href="tel:+385998731865" class="mobile-action-item call"><span>📞 Nazovi</span></a>
+        <a href="https://wa.me/385998731865" target="_blank" class="mobile-action-item wa"><span>💬 WhatsApp</span></a>
+        <a href="mailto:fraktal@fraktal-obrt.com" class="mobile-action-item mail"><span>✉️ E-mail</span></a>
+        <a href="sms:+385998731865" class="mobile-action-item"><span>📱 SMS</span></a>
+    </div>
+
+    <footer>
+        &copy; 2026 FRAKTAL. Sva prava pridržana. Obrt za računalne usluge. | OIB: 87160722361
+    </footer>
+
+</body>
+</html>
